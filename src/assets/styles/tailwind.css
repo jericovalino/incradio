@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .bg-image-pattern {
+    background-image: url('../images/patterns.svg');
+  }
+
+  .bg-color-gradient {
+    background: linear-gradient(30deg, #77aa45cc 0%, #02583f 60%, #262626 100%);
+  }
+}
