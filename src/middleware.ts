@@ -2,16 +2,13 @@ import { createClient } from '@/utils/supabase/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const middleware = async (request: NextRequest) => {
-  const { pathname, searchParams } = new URL(request.url);
+  const { pathname } = new URL(request.url);
 
   /* -------------------------------------------------------------------------- */
   const client = createClient(request);
   const userData = await client.supabase.auth.getUser();
-  // console.log('userData: ', userData);
   const user = userData.data.user;
   /* -------------------------------------------------------------------------- */
-
-  console.log('user: ', user);
 
   switch (pathname) {
     case '/core':
