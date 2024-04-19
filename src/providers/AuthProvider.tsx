@@ -1,19 +1,16 @@
 'use client';
-import { createContext, useCallback, useEffect, useState } from 'react';
-
-import { type User } from '@supabase/supabase-js';
-import supabase from '@/utils/supabase/client';
+import { createContext, useEffect, useState } from 'react';
 
 import {
+  useSignOutMutation,
   useProfileDataQuery,
   useSignInWithGoogleMutation,
-  useSignOutMutation,
 } from '@/app/authentication/_hooks';
 import { SplashScreen } from '@/components/containers';
+import { Profile } from '@/app/authentication/schema';
 
-type ProfileData = User;
 type AuthContext = {
-  profileData: ProfileData | null;
+  profileData: Profile | null;
   isAuthenticated: boolean;
   isSigningIn: boolean;
   isSigningOut: boolean;
@@ -29,7 +26,7 @@ type Props = {
 };
 
 const AuthProvider = ({ children }: Props) => {
-  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [profileData, setProfileData] = useState<Profile | null>(null);
   const {
     data: profileQueryData,
     isLoading: isLoadingProfile,
@@ -43,6 +40,7 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     if (profileQueryData) setProfileData(profileQueryData);
   }, [profileQueryData, setProfileData]);
+
   return (
     <AuthContext.Provider
       value={{
