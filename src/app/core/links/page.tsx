@@ -1,5 +1,11 @@
+import { PageWrapper } from '@/components/containers';
+
 const Links = () => {
-  return <div>links here</div>;
+  return (
+    <PageWrapper pageTitle="Links" pageDescription="Lorem ipsum dolor">
+      Links here
+    </PageWrapper>
+  );
 };
 
 export default Links;

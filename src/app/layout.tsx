@@ -1,8 +1,11 @@
 import { Inter } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
 
-import { AuthProvider, QueryProvider } from '@/providers';
+import { cn } from '@/utils';
+import { AuthProvider, QueryProvider, ModalProvider } from '@/providers';
 
 import '../assets/styles/tailwind.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ['latin'] });
 export default function RootLayout({
@@ -15,11 +18,14 @@ export default function RootLayout({
       <head>
         <title>INC Radio</title>
       </head>
-      <body className={inter.className}>
+      <body className={cn(inter.className, 'text-gray-600')}>
         <QueryProvider>
           <AuthProvider>
-            {/* ... */}
-            {children}
+            <ModalProvider>
+              {/* ... */}
+              {children}
+              <ToastContainer />
+            </ModalProvider>
           </AuthProvider>
         </QueryProvider>
       </body>
