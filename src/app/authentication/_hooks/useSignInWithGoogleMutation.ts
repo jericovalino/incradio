@@ -5,7 +5,7 @@ const signInWithGoogle = () =>
   supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${location.origin}?from=google`,
+      redirectTo: `${location.origin}/?from=google`,
     },
   });
 

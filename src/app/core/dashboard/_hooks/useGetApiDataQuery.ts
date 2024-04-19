@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 
-const getApi = () => axios.get('/api');
+const getApi = () => axios.get('/core_locals');
 
 const useGetApiDataQuery = () => {
   return useQuery({

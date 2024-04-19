@@ -2,10 +2,12 @@
 
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
+import { redirect } from 'next/navigation';
 
 import { coloredLogo } from '@/assets/images';
+
 import { useAuthentication } from '../authentication/_hooks';
-import { redirect } from 'next/navigation';
+import { Button } from '@/components/input_controls';
 
 export default function Login() {
   const { signInWithGoogle, isAuthenticated } = useAuthentication();
@@ -19,9 +21,9 @@ export default function Login() {
           <h1 className="text-4xl text-black/30 font-bold">| clicks</h1>
         </div>
 
-        <button
-          type="button"
-          className="flex px-3 py-2 rounded-lg shadow bg-white space-x-1 items-center animate-pulse hover:animate-none hover:scale-105 transition-transform active:scale-100"
+        <Button
+          size="large"
+          leftIcon={FcGoogle}
           onClick={() =>
             signInWithGoogle(undefined, {
               onSuccess: () => {
@@ -30,11 +32,8 @@ export default function Login() {
             })
           }
         >
-          <FcGoogle className="w-6 h-6" />
-          <span className="text-gray-600 font-semibold text-lg">
-            Sign in with Google
-          </span>
-        </button>
+          Sign in with Google
+        </Button>
       </div>
     </div>
   );
