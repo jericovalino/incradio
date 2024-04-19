@@ -47,7 +47,7 @@ const useLocalCreation = () => {
             </ModalCard>
           ),
     });
-  }, [createModal, queryClient]);
+  }, [createModal, queryClient, createLocal]);
 
   return {
     openLocalCreationModal,
