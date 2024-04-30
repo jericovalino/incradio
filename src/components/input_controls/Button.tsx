@@ -34,7 +34,7 @@ const MAP_THEME_TEXT_CLASS = {
 
 const MAP_THEME_ICON_CLASS = {
   primary:
-    'bg-brand text-white hover:bg-brand/40 active:bg-brand aspect-square',
+    'bg-primary text-white hover:bg-primary/40 active:bg-primary aspect-square',
   info: 'bg-info text-onInfo hover:bg-info-hovered active:bg-info-pressed aspect-square',
   danger:
     'bg-danger text-onDanger hover:bg-danger-hovered active:bg-danger-pressed aspect-square',
