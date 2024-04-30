@@ -1,19 +1,28 @@
 'use client';
 import Chart from 'react-apexcharts';
-import { PageWrapper } from '@/components/containers';
-
-import { useLinkClickHistoryListQuery, useLinkDataQuery } from './_hooks';
-import { useEffect } from 'react';
-import FieldView from '@/components/informationals/FieldView';
-import { Button } from '@/components/input_controls';
+import { IoMenu } from 'react-icons/io5';
 import { FaRegCopy } from 'react-icons/fa6';
-import { Table } from '@/components/informationals';
+import { useRouter } from 'next/navigation';
+import { TbArrowBigLeftFilled } from 'react-icons/tb';
+
+import { Button } from '@/components/input_controls';
+import { PageWrapper } from '@/components/containers';
+import { Table, FieldView } from '@/components/informationals';
+
+import {
+  useLinkClickHistoryListQuery,
+  useLinkClickRankListQuery,
+  useLinkDataQuery,
+  useShareableLinks,
+} from './_hooks';
 
 type Props = {
   params: {
     link_uuid: string;
   };
 };
+
+const fillColors = ['#02583f', '#77aa45cc', '#262626', '#ff9171', '#8c8805'];
 
 const getYoutubeVideoIdFromUrl = (url: string) => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -27,14 +36,28 @@ const Link = ({ params }: Props) => {
   const { data: clickList, isLoading } = useLinkClickHistoryListQuery(
     params.link_uuid
   );
+  const router = useRouter();
+
+  const { data: rankList } = useLinkClickRankListQuery(params.link_uuid);
+  const { isReady, copyLinks } = useShareableLinks(params.link_uuid);
 
   return (
     <PageWrapper
-      pageTitle={data?.title ?? '-'}
+      pageTitle={
+        <div className="flex items-center gap-2">
+          <Button
+            style="icon"
+            size="small"
+            icon={TbArrowBigLeftFilled}
+            onClick={() => router.push('/core/links')}
+          />
+          <span>{data?.title ?? '-'}</span>
+        </div>
+      }
       pageDescription={data?.url ?? '-'}
       containerClassName="@container"
     >
-      <div className="grid grid-cols-12 gap-4">
+      <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 @lg:col-span-5">
           <iframe
             className="aspect-video w-full"
@@ -53,20 +76,37 @@ const Link = ({ params }: Props) => {
             />
             <FieldView label="Code" value={data?.code} />
           </div>
-          <Button theme="primary" style="outline" leftIcon={FaRegCopy}>
-            Copy shareable links
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              theme="primary"
+              style="outline"
+              leftIcon={FaRegCopy}
+              disabled={!isReady}
+              onClick={copyLinks}
+            >
+              Copy shareable links
+            </Button>
+            <Button style="icon" icon={IoMenu} />
+          </div>
         </div>
       </div>
 
       <section className="grid gap-6 @lg:grid-cols-2">
         <div>
-          <h3 className="mt-6 text-lg font-semibold leading-5">Rankings</h3>
+          <h3 className="mt-6 text-lg font-semibold leading-5">
+            Local Rankings
+          </h3>
           <p className="text-sm">Lorem ipsum dolor</p>
 
           <Chart
             type="bar"
             options={{
+              grid: {
+                padding: {
+                  left: 0,
+                  right: 0,
+                },
+              },
               plotOptions: {
                 bar: {
                   horizontal: true,
@@ -76,23 +116,12 @@ const Link = ({ params }: Props) => {
             series={[
               {
                 name: 'click counts',
-                data: [
-                  {
-                    x: 'Butong',
-                    y: 18,
-                    fillColor: '#02583f',
-                  },
-                  {
-                    x: 'Lemery',
-                    y: 13,
-                    fillColor: '#77aa45cc',
-                  },
-                  {
-                    x: 'Taal',
-                    y: 10,
-                    fillColor: '#262626',
-                  },
-                ],
+                data:
+                  rankList?.map((rank, i) => ({
+                    x: rank.local_name,
+                    y: rank.click_count,
+                    fillColor: fillColors[i],
+                  })) ?? [],
               },
             ]}
           />
@@ -107,16 +136,12 @@ const Link = ({ params }: Props) => {
               format={[
                 {
                   label: 'Date/Time',
-                  key: 'created_at',
+                  key: 'created_at_human',
                 },
                 {
                   label: 'Local',
                   key: 'local_name',
                 },
-                // {
-                //   label: 'IP Address',
-                //   key: 'ip',
-                // },
               ]}
             />
           </div>
