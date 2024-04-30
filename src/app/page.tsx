@@ -1,24 +1,31 @@
 'use client';
 
 import { useEffect } from 'react';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { ColoredLogo } from '@/components/informationals';
 
 function Home() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
-    console.log('client: to "/core": ', searchParams.get('from'));
-    if (searchParams.get('from') === 'google') redirect('/core');
-  }, [searchParams]);
+    if (searchParams.get('from') !== 'google') return;
+    console.log('redirecting to /core');
+    const t = setTimeout(() => {
+      router.push('/core');
+    }, 500);
+    return () => {
+      clearTimeout(t);
+    };
+  }, [searchParams, router]);
   return (
-    <div className="h-screen bg-color-gradient p-5">
-      <div className="absolute bg-image-pattern inset-0 w-full h-full bg-no-repeat bg-cover" />
-      <div className="w-full h-full relative items-center justify-center flex flex-col  z-10">
-        <div className="absolute top-0 left-0 flex space-x-2 items-center">
+    <div className="bg-color-gradient h-screen p-5">
+      <div className="bg-image-pattern absolute inset-0 h-full w-full bg-cover bg-no-repeat" />
+      <div className="relative z-10 flex h-full w-full flex-col items-center  justify-center">
+        <div className="absolute left-0 top-0 flex items-center space-x-2">
           <ColoredLogo width={150} />
-          <h1 className="text-4xl text-black/30 font-bold">| clicks</h1>
+          <h1 className="text-4xl font-bold text-black/30">| clicks</h1>
         </div>
       </div>
     </div>

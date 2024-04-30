@@ -4,18 +4,14 @@ import { createContext, useEffect, useState } from 'react';
 import {
   useSignOutMutation,
   useProfileDataQuery,
-  useSignInWithGoogleMutation,
 } from '@/app/authentication/_hooks';
 import { SplashScreen } from '@/components/containers';
 import { Profile } from '@/app/authentication/schema';
 
 type AuthContext = {
-  profileData: Profile | null;
-  isAuthenticated: boolean;
-  isSigningIn: boolean;
+  profileData?: Profile;
   isSigningOut: boolean;
   isLoadingProfile: boolean;
-  signInWithGoogle: ReturnType<typeof useSignInWithGoogleMutation>['mutate'];
   signOut: ReturnType<typeof useSignOutMutation>['mutate'];
 };
 
@@ -26,29 +22,19 @@ type Props = {
 };
 
 const AuthProvider = ({ children }: Props) => {
-  const [profileData, setProfileData] = useState<Profile | null>(null);
   const {
-    data: profileQueryData,
+    data: profileData,
     isLoading: isLoadingProfile,
     isFetched,
   } = useProfileDataQuery();
-  const { mutate: signInWithGoogle, isPending: isSigningIn } =
-    useSignInWithGoogleMutation();
 
   const { mutate: signOut, isPending: isSigningOut } = useSignOutMutation();
-
-  useEffect(() => {
-    if (profileQueryData) setProfileData(profileQueryData);
-  }, [profileQueryData, setProfileData]);
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated: Boolean(profileData),
         profileData,
         isLoadingProfile,
-        signInWithGoogle,
-        isSigningIn,
         signOut,
         isSigningOut,
       }}

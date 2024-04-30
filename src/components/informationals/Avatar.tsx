@@ -41,7 +41,7 @@ const Avatar = ({
       {(rest.placeholderType ?? 'icon') === 'initials' || Boolean(imgSrc) ? (
         <img
           src={imgSrc}
-          className="grid h-full w-full place-items-center font-medium uppercase text-subtle"
+          className="text-subtle grid h-full w-full place-items-center font-medium uppercase"
           alt={rest.alt
             ?.split(' ')
             .slice(0, 2)
@@ -49,7 +49,7 @@ const Avatar = ({
             .join('')}
         />
       ) : (
-        <Icon className="h-full w-full translate-y-[10%] text-subtle" />
+        <Icon className="text-subtle h-full w-full translate-y-[10%]" />
       )}
     </div>
   );

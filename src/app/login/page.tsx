@@ -6,19 +6,20 @@ import { redirect } from 'next/navigation';
 
 import { coloredLogo } from '@/assets/images';
 
-import { useAuthentication } from '../authentication/_hooks';
 import { Button } from '@/components/input_controls';
 
-export default function Login() {
-  const { signInWithGoogle, isAuthenticated } = useAuthentication();
+import { useSignInWithGoogleMutation } from '../authentication/_hooks';
+
+const Login = () => {
+  const { mutate: signInWithGoogle } = useSignInWithGoogleMutation();
 
   return (
-    <div className="h-screen bg-color-gradient p-5">
-      <div className="absolute bg-image-pattern inset-0 w-full h-full bg-no-repeat bg-cover" />
-      <div className="w-full h-full relative items-center justify-center flex flex-col  z-10">
-        <div className="absolute top-0 left-0 flex space-x-2 items-center">
+    <div className="bg-color-gradient h-screen p-5">
+      <div className="bg-image-pattern absolute inset-0 h-full w-full bg-cover bg-no-repeat" />
+      <div className="relative z-10 flex h-full w-full flex-col items-center  justify-center">
+        <div className="absolute left-0 top-0 flex items-center space-x-2">
           <Image alt="logo" src={coloredLogo} width={150} />
-          <h1 className="text-4xl text-black/30 font-bold">| clicks</h1>
+          <h1 className="text-4xl font-bold text-black/30">| clicks</h1>
         </div>
 
         <Button
@@ -37,4 +38,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default Login;

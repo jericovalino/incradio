@@ -27,25 +27,24 @@ const useLocalCreation = () => {
     createModal({
       content:
         (close) =>
-        ({ isLoading }) =>
-          (
-            <ModalCard onClose={close} title="Add Local">
-              <LocalCreationForm
-                onSubmit={(values) => {
-                  createLocal(values, {
-                    onSuccess: () => {
-                      close();
-                      toast.success('New Local Added');
-                      queryClient.invalidateQueries({
-                        queryKey: ['LOCALS'],
-                      });
-                    },
-                  });
-                }}
-                disabled={isLoading}
-              />
-            </ModalCard>
-          ),
+        ({ isLoading }) => (
+          <ModalCard onClose={close} title="Add Local">
+            <LocalCreationForm
+              onSubmit={(values) => {
+                createLocal(values, {
+                  onSuccess: () => {
+                    close();
+                    toast.success('New Local Added');
+                    queryClient.invalidateQueries({
+                      queryKey: ['LOCALS'],
+                    });
+                  },
+                });
+              }}
+              disabled={isLoading}
+            />
+          </ModalCard>
+        ),
     });
   }, [createModal, queryClient, createLocal]);
 

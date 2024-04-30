@@ -42,7 +42,7 @@ function FormInput({
     <div className="flex flex-col items-start space-y-1">
       <label
         htmlFor={name}
-        className="flex w-full justify-between text-xs font-medium leading-[0.875rem] text-subtle"
+        className="text-subtle flex w-full justify-between text-xs font-medium leading-[0.875rem]"
       >
         <span>{label}</span>
         {optional && !readOnly && (
@@ -53,7 +53,7 @@ function FormInput({
         {Icon ? (
           <Icon
             className={cn(
-              'absolute left-[0.625rem] top-1/2 h-[0.875rem] w-[0.875rem] -translate-y-1/2 text-subtle',
+              'text-subtle absolute left-[0.625rem] top-1/2 h-[0.875rem] w-[0.875rem] -translate-y-1/2',
               disabled ? 'text-disabled' : '',
               error ? 'text-onDanger-subtle' : ''
             )}
@@ -64,8 +64,8 @@ function FormInput({
           data-test-id={testId}
           {...registerRest}
           className={cn(
-            'w-full rounded border bg-white p-[0.625rem] text-sm leading-4 placeholder:text-placeholder',
-            'focus:outline-none disabled:bg-interface-disabled ',
+            'placeholder:text-placeholder w-full rounded border bg-white p-[0.625rem] text-sm leading-4',
+            'disabled:bg-interface-disabled focus:outline-none ',
             '[&:not(:disabled)]:read-only:border-none [&:not(:disabled)]:read-only:bg-white [&:not(:disabled)]:read-only:px-0 [&:not(:disabled)]:read-only:pt-1.5 ',
             hasIcon ? 'pl-[1.6rem]' : '',
             error

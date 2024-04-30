@@ -44,7 +44,7 @@ const FilterSearch = ({
         value={_value}
         onChange={(e) => _setValue(e.target.value)}
         className={cn(
-          'h-[2.25rem] w-full rounded px-2 py-[0.625rem] text-sm leading-4 placeholder:text-placeholder',
+          'placeholder:text-placeholder h-[2.25rem] w-full rounded px-2 py-[0.625rem] text-sm leading-4',
           'focus:outline-none'
         )}
         placeholder={placeholder}

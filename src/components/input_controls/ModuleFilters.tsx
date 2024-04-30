@@ -33,7 +33,7 @@ type ModuleFiltersProps<TFilter extends Record<string, any>, TSetFilter> = {
 
 const ModuleFilters = <
   TFilter extends Record<string, any>,
-  TSetFilter extends React.Dispatch<React.SetStateAction<TFilter>>
+  TSetFilter extends React.Dispatch<React.SetStateAction<TFilter>>,
 >({
   filter,
   setFilter,
@@ -62,11 +62,14 @@ const ModuleFilters = <
   /* -------------------------------------------------------------------------- */
 
   const activeFiltersMeta = useMemo(() => {
-    const value = Object.keys(filter).reduce((acc, cur) => {
-      const currentKeyValue = filter[cur];
-      if (currentKeyValue) acc[cur] = currentKeyValue;
-      return acc;
-    }, {} as Record<string, any>);
+    const value = Object.keys(filter).reduce(
+      (acc, cur) => {
+        const currentKeyValue = filter[cur];
+        if (currentKeyValue) acc[cur] = currentKeyValue;
+        return acc;
+      },
+      {} as Record<string, any>
+    );
     return {
       count: Object.keys(value).length,
       value,
@@ -103,7 +106,7 @@ const ModuleFilters = <
       <div className="mt-2 flex items-center justify-between rounded-[0.38rem] border p-3">
         <div className="flex flex-grow space-x-1">
           {!activeFiltersMeta.count ? (
-            <p className="text-xs leading-[0.875rem] text-subtle">
+            <p className="text-subtle text-xs leading-[0.875rem]">
               No filters added
             </p>
           ) : (
@@ -111,7 +114,7 @@ const ModuleFilters = <
               {Object.keys(activeFiltersMeta.value).map((key) => (
                 <p
                   key={key}
-                  className="text-xs leading-[0.875rem] text-subtle [&:not(:last-of-type)]:mr-1 [&:not(:last-of-type)]:border-r-2 [&:not(:last-of-type)]:pr-2"
+                  className="text-subtle text-xs leading-[0.875rem] [&:not(:last-of-type)]:mr-1 [&:not(:last-of-type)]:border-r-2 [&:not(:last-of-type)]:pr-2"
                 >
                   {key} is{' '}
                   <span className="font-medium">

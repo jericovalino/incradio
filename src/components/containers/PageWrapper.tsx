@@ -28,7 +28,7 @@ const PageWrapper = ({
             <h1 className="text-2xl font-semibold">{pageTitle}</h1>
           )}
           {Boolean(pageDescription) && (
-            <p className="text-sm leading-4 text-subtle">{pageDescription}</p>
+            <p className="text-subtle text-sm leading-4">{pageDescription}</p>
           )}
         </div>
       )}

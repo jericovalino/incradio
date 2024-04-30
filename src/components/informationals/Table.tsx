@@ -9,7 +9,7 @@ type TGenericTable = <
     label: string;
     key: keyof TData;
     render?: (row: TData, index: number) => React.ReactNode;
-  }
+  },
 >(props: {
   format: TFormat[];
   data: TData[];
@@ -34,7 +34,7 @@ const Table: TGenericTable = function ({
   onLoadMoreClicked,
 }) {
   return (
-    <div className="hide-scrollbar relative h-full max-h-full w-full overflow-auto rounded-[0.25rem] border bg-interface">
+    <div className="hide-scrollbar bg-interface relative h-full max-h-full w-full overflow-auto rounded-[0.25rem] border">
       <div className="table-container">
         {tableTitle && <caption>{tableTitle}</caption>}
         <table>

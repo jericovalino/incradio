@@ -71,7 +71,7 @@ const Modal = ({ modal, i }: { modal: ModalType; i: number }) => {
   return (
     <>
       <div
-        className={`bg-primary relative mr-1 flex cursor-pointer items-center rounded-tl-lg rounded-tr-lg border-l border-r border-t border-white px-2 py-1 ${
+        className={`relative mr-1 flex cursor-pointer items-center rounded-tl-lg rounded-tr-lg border-l border-r border-t border-white bg-primary px-2 py-1 ${
           isTransformMinimize ? '' : 'invisible'
         }`}
       >

@@ -1,8 +1,6 @@
-import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/drizzle/db';
-import { DistrictTable, LocalTable, UserTable } from '@/drizzle/schema';
 import { createClient } from '@/utils/supabase/middleware';
 
 const unauthorizedResponse = NextResponse.json(
@@ -26,20 +24,22 @@ export const GET = async (req: NextRequest) => {
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------------------------------------------------- */
-  const users = await db
-    .select({
-      id: UserTable.id,
-      name: UserTable.name,
-      email: UserTable.email,
-      district: DistrictTable,
-    })
-    .from(UserTable)
-    .where(eq(UserTable.email, authUser.email!))
-    .leftJoin(DistrictTable, eq(UserTable.district_id, DistrictTable.id));
-  if (users.length !== 1) return unauthorizedResponse;
-  /* -------------------------------------------------------------------------- */
+  try {
+    const user = await db.query.UserTable.findFirst({
+      where: (tableRow, methods) => methods.eq(tableRow.email, authUser.email!),
+      with: {
+        district: true,
+      },
+    });
+    if (!user) return unauthorizedResponse;
+    /* -------------------------------------------------------------------------- */
 
-  const user = { ...users[0], picture: authUser.user_metadata.picture };
-
-  return NextResponse.json(user);
+    return NextResponse.json({
+      ...user,
+      picture: authUser.user_metadata.picture,
+    });
+  } catch (error) {
+    console.log('error: ', error);
+    return unauthorizedResponse;
+  }
 };
