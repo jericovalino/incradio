@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { cn } from '@/utils';
 
 type Props = {
-  pageTitle?: string;
+  pageTitle?: string | ReactNode;
   pageDescription?: string;
   children: ReactNode;
   containerClassName?: string;
