@@ -1,10 +1,5 @@
-import { z } from 'zod';
+import { InferSelectModel } from 'drizzle-orm';
 
-const LocalSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  code: z.string(),
-  district_id: z.string(),
-});
+import { LocalTable } from '@/drizzle/schema';
 
-export type Local = z.infer<typeof LocalSchema>;
+export type Local = InferSelectModel<typeof LocalTable>;

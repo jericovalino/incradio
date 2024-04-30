@@ -102,7 +102,7 @@ const Button = ({
           icon: MAP_THEME_ICON_CLASS[theme],
         }[rest.style ?? 'normal'],
         'flex items-center justify-center rounded focus:ring-4',
-        'disabled:border disabled:border-subtle disabled:bg-interface-disabled disabled:text-disabled',
+        'disabled:border-subtle disabled:bg-interface-disabled disabled:text-disabled disabled:border',
         rest.style === 'icon' && rest.isRounded ? 'rounded-full' : '',
         className
       )}

@@ -20,13 +20,11 @@ export default function RootLayout({
       </head>
       <body className={cn(inter.className, 'text-gray-600')}>
         <QueryProvider>
-          <AuthProvider>
-            <ModalProvider>
-              {/* ... */}
-              {children}
-              <ToastContainer />
-            </ModalProvider>
-          </AuthProvider>
+          <ModalProvider>
+            {/* ... */}
+            {children}
+            <ToastContainer />
+          </ModalProvider>
         </QueryProvider>
       </body>
     </html>

@@ -22,12 +22,12 @@ type NavLinkProps = ComponentPropsWithRef<typeof Link> & {
 };
 const NavLink = ({ icon: Icon, ...rest }: NavLinkProps) => {
   const pathName = usePathname();
-  const isActive = rest.href.toString().startsWith(pathName);
+  const isActive = pathName.startsWith(rest.href.toString());
 
   return (
     <Link
       className={cn(
-        'font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] flex items-center space-x-2 hover:text-red-500/90',
+        'flex items-center space-x-2 font-medium drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:text-red-500/90',
         isActive ? 'text-red-500/90' : 'text-white/90'
       )}
       {...rest}
@@ -52,36 +52,36 @@ const Sidebar = ({ onBackdropClicked, showInMdAndBelow }: Props) => {
     <>
       <aside
         className={cn(
-          'h-[100svh] fixed bg-color-gradient w-64 rounded-r-[2rem] flex-shrink-0 z-20',
+          'bg-color-gradient fixed z-20 h-[100svh] w-64 flex-shrink-0 rounded-r-[2rem]',
           'transition-transform ease-[cubic-bezier(0.47,1.64,0.41,0.8)] md:static md:translate-x-0',
           !showInMdAndBelow ? '-translate-x-full' : ''
         )}
       >
-        <div className="flex flex-col relative w-full h-full px-4 py-6">
-          <div className="absolute inset-0 w-full h-full bg-image-pattern" />
-          <div className="flex space-x-2 items-center">
+        <div className="relative flex h-full w-full flex-col px-4 py-6">
+          <div className="bg-image-pattern absolute inset-0 h-full w-full" />
+          <div className="flex items-center space-x-2">
             <ColoredLogo width={100} />
-            <h1 className="text-2xl text-black/30 font-bold">| clicks</h1>
+            <h1 className="text-2xl font-bold text-black/30">| clicks</h1>
           </div>
-          <h2 className="mt-4 text-lg text-black/30 font-bold">
+          <h2 className="mt-4 text-lg font-bold text-black/30">
             District of {profileData?.district.name}
           </h2>
-          <nav className="mt-2 flex-grow flex flex-col space-y-2 z-10">
+          <nav className="z-10 mt-2 flex flex-grow flex-col space-y-2">
             <NavLink href="/core/dashboard" icon={FaChartSimple}>
               Dashboard
             </NavLink>
             <NavLink href="/core/links" icon={FaLink}>
               Links
             </NavLink>
-            <p className="mt-4 text-lg text-black/30 font-bold">Settings</p>
+            <p className="mt-4 text-lg font-bold text-black/30">Settings</p>
             <NavLink href="/core/locals" icon={GiChurch}>
               Locals
             </NavLink>
             <div className="!mt-auto flex items-center justify-between">
-              <div className="flex space-x-2 items-center">
+              <div className="flex items-center space-x-2">
                 <Avatar isRounded imgSrc={profileData?.picture ?? undefined} />
-                <div className="text-white/90 flex flex-col">
-                  <p className="font-medium leading-4 capitalize drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+                <div className="flex flex-col text-white/90">
+                  <p className="font-medium capitalize leading-4 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
                     {profileData?.name}
                   </p>
                   <small className="text-xs drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">

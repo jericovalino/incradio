@@ -17,13 +17,10 @@ const useCreateModal = <TState>(key = 'modal', state?: TState) => {
   const prevStateRef = useRef<TState | null>(null);
 
   useEffect(() => {
-    if (state) {
-      if (JSON.stringify(prevStateRef.current) === JSON.stringify(state)) {
-        return;
-      }
-      prevStateRef.current = state;
-      context?.setStates((prev) => ({ ...prev, [key]: state }));
-    }
+    if (!state) return;
+    if (JSON.stringify(prevStateRef.current) === JSON.stringify(state)) return;
+    prevStateRef.current = state;
+    context?.setStates((prev) => ({ ...prev, [key]: state }));
   }, [state, context?.setStates, key]);
 
   const createModal = useCallback(

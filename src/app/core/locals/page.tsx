@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 
 import { Table } from '@/components/informationals';
@@ -13,6 +13,7 @@ const Locals = () => {
   const { data: localList, isLoading } = useLocalListQuery();
   const [filter, setFilter] = useState({});
   const { openLocalCreationModal } = useLocalCreation();
+
   return (
     <PageWrapper pageTitle="Locals" pageDescription="Lorem ipsum dolor">
       <div className="space-y-2">

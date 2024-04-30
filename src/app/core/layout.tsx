@@ -8,6 +8,7 @@ import { cn } from '@/utils';
 import { Button } from '@/components/input_controls';
 import { Sidebar } from '@/components/navigations';
 import { ColoredLogo } from '@/components/informationals';
+import { AuthProvider } from '@/providers';
 
 type Props = {
   onMenuClicked: () => void;
@@ -17,7 +18,7 @@ const Topbar = ({ onMenuClicked, showInMdAndBelow }: Props) => {
   return (
     <header
       className={cn(
-        'h-12 top-0 left-0 right-0 bg-color-gradient w-full rounded-b-lg flex-shrink-0 z-20 md:hidden flex justify-center items-center relative transition-opacity',
+        'bg-color-gradient relative left-0 right-0 top-0 z-20 flex h-12 w-full flex-shrink-0 items-center justify-center rounded-b-lg transition-opacity md:hidden',
         showInMdAndBelow ? 'opacity-30' : ''
       )}
     >
@@ -27,9 +28,9 @@ const Topbar = ({ onMenuClicked, showInMdAndBelow }: Props) => {
         className="absolute left-1 top-1/2 -translate-y-1/2"
         onClick={onMenuClicked}
       />
-      <div className="flex space-x-2 items-center">
+      <div className="flex items-center space-x-2">
         <ColoredLogo width={80} />
-        <h1 className="text-xl text-black/30 font-bold">| clicks</h1>
+        <h1 className="text-xl font-bold text-black/30">| clicks</h1>
       </div>
     </header>
   );
@@ -42,16 +43,18 @@ export default function CoreLayout({
 }>) {
   const [showInMdAndBelow, setShowInMdAndBelow] = useState(false);
   return (
-    <div className="relative flex sm:h-[100svh] flex-col md:flex-row">
-      <Topbar
-        showInMdAndBelow={showInMdAndBelow}
-        onMenuClicked={() => setShowInMdAndBelow(true)}
-      />
-      <Sidebar
-        showInMdAndBelow={showInMdAndBelow}
-        onBackdropClicked={() => setShowInMdAndBelow(false)}
-      />
-      <main className="w-full sm:flex-grow">{children}</main>
-    </div>
+    <AuthProvider>
+      <div className="relative flex flex-col sm:h-[100svh] md:flex-row">
+        <Topbar
+          showInMdAndBelow={showInMdAndBelow}
+          onMenuClicked={() => setShowInMdAndBelow(true)}
+        />
+        <Sidebar
+          showInMdAndBelow={showInMdAndBelow}
+          onBackdropClicked={() => setShowInMdAndBelow(false)}
+        />
+        <main className="w-full sm:flex-grow">{children}</main>
+      </div>
+    </AuthProvider>
   );
 }
