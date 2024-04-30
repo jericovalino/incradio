@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, uuid, varchar, integer } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp, cidr } from 'drizzle-orm/pg-core';
 
 export const DistrictTable = pgTable('district', {
   id: uuid('id').primaryKey().defaultRandom().unique(),
@@ -31,36 +31,34 @@ export const LocalTable = pgTable('local', {
 });
 
 export const LinkTable = pgTable('link', {
-  id: uuid('id').primaryKey().defaultRandom().unique(),
-  href: varchar('href').notNull(),
+  id: uuid('id').defaultRandom().unique(),
+  title: varchar('title').notNull(),
+  code: varchar('code').unique().primaryKey(),
+  created_at: timestamp('created_at').defaultNow(),
+  url: varchar('url').notNull(),
   district_id: uuid('district_id')
     .references(() => DistrictTable.id)
     .notNull(),
-  click_count: integer('click_count').default(0).notNull(),
 });
 
-export const LocalLinkTable = pgTable('local_link', {
+export const ClickTable = pgTable('click', {
   id: uuid('id').primaryKey().defaultRandom().unique(),
-  href: varchar('href').notNull(),
-  click_count: integer('click_count').default(0).notNull(),
-  link_id: uuid('link_id')
-    .references(() => LinkTable.id)
+  created_at: timestamp('created_at').defaultNow(),
+  local_code: varchar('local_code')
+    .references(() => LocalTable.code)
     .notNull(),
-  local_id: uuid('local_id')
-    .references(() => LocalTable.id)
+  link_code: varchar('link_code')
+    .references(() => LinkTable.code)
     .notNull(),
-  district_id: uuid('district_id')
-    .references(() => DistrictTable.id)
-    .notNull(),
+  ip: cidr('ip').default('0.0.0.0'),
 });
 
 // RELATIONS
 
 export const DistrictTableRelations = relations(DistrictTable, ({ many }) => ({
   user: many(UserTable),
-  local: many(UserTable),
-  link: many(UserTable),
-  localLink: many(UserTable),
+  local: many(LocalTable),
+  link: many(LinkTable),
 }));
 
 export const UserTableRelations = relations(UserTable, ({ one }) => ({
@@ -70,12 +68,11 @@ export const UserTableRelations = relations(UserTable, ({ one }) => ({
   }),
 }));
 
-export const LocalTableRelations = relations(LocalTable, ({ one, many }) => ({
+export const LocalTableRelations = relations(LocalTable, ({ one }) => ({
   district: one(DistrictTable, {
     fields: [LocalTable.district_id],
     references: [DistrictTable.id],
   }),
-  localLink: many(LocalLinkTable),
 }));
 
 export const LinkTableRelations = relations(LinkTable, ({ one, many }) => ({
@@ -83,20 +80,16 @@ export const LinkTableRelations = relations(LinkTable, ({ one, many }) => ({
     fields: [LinkTable.district_id],
     references: [DistrictTable.id],
   }),
-  localLink: many(LocalLinkTable),
+  click: many(ClickTable),
 }));
 
-export const LocalLinkTableRelations = relations(LocalLinkTable, ({ one }) => ({
-  local: one(LocalTable, {
-    fields: [LocalLinkTable.local_id],
-    references: [LocalTable.id],
-  }),
+export const ClickTableRelations = relations(ClickTable, ({ one }) => ({
   link: one(LinkTable, {
-    fields: [LocalLinkTable.link_id],
-    references: [LinkTable.id],
+    fields: [ClickTable.link_code],
+    references: [LinkTable.code],
   }),
-  district: one(DistrictTable, {
-    fields: [LocalLinkTable.district_id],
-    references: [DistrictTable.id],
+  local: one(LocalTable, {
+    fields: [ClickTable.local_code],
+    references: [LocalTable.code],
   }),
 }));

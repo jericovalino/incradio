@@ -1,9 +1,77 @@
 {
-  "id": "064e4d24-4be6-4361-8283-b162ad4d883e",
+  "id": "1785276f-d8b5-4556-ac21-2c1df2884ab5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
   "tables": {
+    "click": {
+      "name": "click",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "local_code": {
+          "name": "local_code",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "link_code": {
+          "name": "link_code",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ip": {
+          "name": "ip",
+          "type": "cidr",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0.0.0.0'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "click_local_code_local_code_fk": {
+          "name": "click_local_code_local_code_fk",
+          "tableFrom": "click",
+          "tableTo": "local",
+          "columnsFrom": ["local_code"],
+          "columnsTo": ["code"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "click_link_code_link_code_fk": {
+          "name": "click_link_code_link_code_fk",
+          "tableFrom": "click",
+          "tableTo": "link",
+          "columnsFrom": ["link_code"],
+          "columnsTo": ["code"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "click_id_unique": {
+          "name": "click_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["id"]
+        }
+      }
+    },
     "district": {
       "name": "district",
       "schema": "",
@@ -29,9 +97,7 @@
         "district_id_unique": {
           "name": "district_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       }
     },
@@ -42,12 +108,31 @@
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
+          "primaryKey": false,
+          "notNull": false,
           "default": "gen_random_uuid()"
         },
-        "href": {
-          "name": "href",
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "url": {
+          "name": "url",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -57,13 +142,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "click_count": {
-          "name": "click_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
         }
       },
       "indexes": {},
@@ -72,12 +150,8 @@
           "name": "link_district_id_district_id_fk",
           "tableFrom": "link",
           "tableTo": "district",
-          "columnsFrom": [
-            "district_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["district_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -87,105 +161,12 @@
         "link_id_unique": {
           "name": "link_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
-        }
-      }
-    },
-    "local_link": {
-      "name": "local_link",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "columns": ["id"]
         },
-        "href": {
-          "name": "href",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "click_count": {
-          "name": "click_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "link_id": {
-          "name": "link_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "local_id": {
-          "name": "local_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "district_id": {
-          "name": "district_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "local_link_link_id_link_id_fk": {
-          "name": "local_link_link_id_link_id_fk",
-          "tableFrom": "local_link",
-          "tableTo": "link",
-          "columnsFrom": [
-            "link_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "local_link_local_id_local_id_fk": {
-          "name": "local_link_local_id_local_id_fk",
-          "tableFrom": "local_link",
-          "tableTo": "local",
-          "columnsFrom": [
-            "local_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "local_link_district_id_district_id_fk": {
-          "name": "local_link_district_id_district_id_fk",
-          "tableFrom": "local_link",
-          "tableTo": "district",
-          "columnsFrom": [
-            "district_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "local_link_id_unique": {
-          "name": "local_link_id_unique",
+        "link_code_unique": {
+          "name": "link_code_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
+          "columns": ["code"]
         }
       }
     },
@@ -225,12 +206,8 @@
           "name": "local_district_id_district_id_fk",
           "tableFrom": "local",
           "tableTo": "district",
-          "columnsFrom": [
-            "district_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["district_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -240,9 +217,7 @@
         "local_id_unique": {
           "name": "local_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       }
     },
@@ -282,12 +257,8 @@
           "name": "user_district_id_district_id_fk",
           "tableFrom": "user",
           "tableTo": "district",
-          "columnsFrom": [
-            "district_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["district_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -297,16 +268,12 @@
         "user_id_unique": {
           "name": "user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         },
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       }
     }
