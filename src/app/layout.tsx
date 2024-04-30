@@ -1,8 +1,9 @@
+import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
 
 import { cn } from '@/utils';
-import { AuthProvider, QueryProvider, ModalProvider } from '@/providers';
+import { QueryProvider, ModalProvider } from '@/providers';
 
 import '../assets/styles/tailwind.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,7 +23,7 @@ export default function RootLayout({
         <QueryProvider>
           <ModalProvider>
             {/* ... */}
-            {children}
+            <Suspense>{children}</Suspense>
             <ToastContainer />
           </ModalProvider>
         </QueryProvider>
