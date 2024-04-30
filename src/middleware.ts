@@ -1,17 +1,6 @@
 import { createClient } from '@/utils/supabase/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
-const getClientIP = (requestHeaders: NextRequest['headers']) => {
-  const FALLBACK_IP_ADDRESS = '0.0.0.0';
-  const forwardedFor = requestHeaders.get('x-forwarded-for');
-
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0] ?? FALLBACK_IP_ADDRESS;
-  }
-
-  return requestHeaders.get('x-real-ip') ?? FALLBACK_IP_ADDRESS;
-};
-
 export const middleware = async (request: NextRequest) => {
   const { pathname } = new URL(request.url);
 
@@ -20,9 +9,6 @@ export const middleware = async (request: NextRequest) => {
   const userData = await client.supabase.auth.getUser();
   const user = userData.data.user;
   /* -------------------------------------------------------------------------- */
-
-  // console.log('pathname: ', pathname);
-  // console.log('withUser: ', !!user);
 
   if (!user) {
     if (pathname.startsWith('/core'))
