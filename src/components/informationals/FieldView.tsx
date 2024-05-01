@@ -13,7 +13,7 @@ function FieldView({ label, value, isLoading = false }: Props) {
       <label className="text-xs font-semibold text-gray-500">{label}</label>
       <div className="relative mt-2 flex w-full items-center">
         {isLoading && !value ? (
-          <div className="h-11 w-full animate-pulse rounded-md bg-gray-300" />
+          <div className="h-5 w-full animate-pulse rounded-md bg-gray-300" />
         ) : (
           <div className="w-full bg-white text-sm leading-4 text-gray-900">
             {isEmpty(value) ? '-' : value}

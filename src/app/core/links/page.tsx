@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 
@@ -39,7 +40,7 @@ const Links = () => {
           data={linkList ?? []}
           format={[
             {
-              key: 'created_at',
+              key: 'created_at_human',
               label: 'Date/Time',
             },
             {
@@ -54,13 +55,11 @@ const Links = () => {
               key: 'id',
               label: 'Action',
               render: (row) => (
-                <Button
-                  theme="primary"
-                  style="outline"
-                  onClick={() => router.push(`/core/links/${row.id}`)}
-                >
-                  View
-                </Button>
+                <Link href={`/core/links/${row.id}`}>
+                  <Button theme="primary" style="outline" className="w-full">
+                    View
+                  </Button>
+                </Link>
               ),
             },
           ]}

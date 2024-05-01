@@ -47,10 +47,11 @@ export const GET = async (req: NextRequest, { params }: { params: Params }) => {
     .select({
       created_at: ClickTable.created_at,
       local_name: LocalTable.name,
+      ip: ClickTable.ip,
     })
     .from(ClickTable)
-    .where(eq(ClickTable.link_code, link.code))
     .leftJoin(LocalTable, eq(LocalTable.code, ClickTable.local_code))
+    .where(eq(ClickTable.link_code, link.code))
     .orderBy(desc(ClickTable.created_at));
   return NextResponse.json(clicks);
 };

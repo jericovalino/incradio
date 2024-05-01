@@ -96,7 +96,7 @@ const ModuleFilters = <
           ))}
         </div>
         {Boolean(actionElements) && (
-          <div className="!ml-auto flex space-x-1">
+          <div className="!ml-auto flex space-x-1 pl-2">
             {actionElements!.map((el, i) => (
               <Fragment key={i}>{el}</Fragment>
             ))}

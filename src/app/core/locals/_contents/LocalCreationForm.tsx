@@ -24,7 +24,12 @@ const LocalCreationForm = forwardFormContext(
     <form onSubmit={ctx.handleSubmit(onSubmit)}>
       <FormInput name="name" label="Name" disabled={disabled} />
       <FormInput name="code" label="Code" disabled={disabled} />
-      <Button asSubmit theme="primary" disabled={disabled}>
+      <Button
+        className="ml-auto mt-2"
+        asSubmit
+        theme="primary"
+        disabled={disabled}
+      >
         Submit
       </Button>
     </form>

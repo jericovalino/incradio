@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
-import { ToastContainer } from 'react-toastify';
+import NextTopLoader from 'nextjs-toploader';
+import { ToastContainer, Flip } from 'react-toastify';
 
 import { cn } from '@/utils';
 import { QueryProvider, ModalProvider } from '@/providers';
@@ -20,11 +21,12 @@ export default function RootLayout({
         <title>INC Radio</title>
       </head>
       <body className={cn(inter.className, 'text-gray-600')}>
+        <NextTopLoader color="#02583f" showSpinner={false} />
         <QueryProvider>
           <ModalProvider>
             {/* ... */}
             <Suspense>{children}</Suspense>
-            <ToastContainer />
+            <ToastContainer hideProgressBar transition={Flip} />
           </ModalProvider>
         </QueryProvider>
       </body>

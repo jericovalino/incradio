@@ -22,8 +22,13 @@ const LinkCreationForm = forwardFormContext(
   ({ onSubmit, disabled = false }: Props, ctx) => (
     <form onSubmit={ctx.handleSubmit(onSubmit)}>
       <FormInput name="title" label="Title" disabled={disabled} />
-      <FormInput name="url" label="Url" disabled={disabled} />
-      <Button asSubmit theme="primary" disabled={disabled}>
+      <FormInput name="url" label="URL" disabled={disabled} />
+      <Button
+        className="ml-auto mt-2"
+        asSubmit
+        theme="primary"
+        disabled={disabled}
+      >
         Submit
       </Button>
     </form>

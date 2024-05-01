@@ -26,21 +26,27 @@ const useLinkCreation = () => {
       content:
         (close) =>
         ({ isLoading }) => (
-          <ModalCard onClose={close} title="Add Link">
-            <LinkCreationForm
-              onSubmit={(values) => {
-                createLink(values, {
-                  onSuccess: () => {
-                    close();
-                    toast.success('New Link Added');
-                    queryClient.invalidateQueries({
-                      queryKey: ['LINKS'],
-                    });
-                  },
-                });
-              }}
-              disabled={isLoading}
-            />
+          <ModalCard onClose={close} title="Add Link" theme="float">
+            <div className="space-y-4">
+              <header>
+                <h3 className="text-lg font-semibold leading-5">Add Link</h3>
+                <p className="text-sm">Lorem ipsum dolor</p>
+              </header>
+              <LinkCreationForm
+                onSubmit={(values) => {
+                  createLink(values, {
+                    onSuccess: () => {
+                      close();
+                      toast.success('New Link Added');
+                      queryClient.invalidateQueries({
+                        queryKey: ['LINKS'],
+                      });
+                    },
+                  });
+                }}
+                disabled={isLoading}
+              />
+            </div>
           </ModalCard>
         ),
     });
