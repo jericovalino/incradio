@@ -18,19 +18,21 @@ const Topbar = ({ onMenuClicked, showInMdAndBelow }: Props) => {
   return (
     <header
       className={cn(
-        'bg-color-gradient relative left-0 right-0 top-0 z-20 flex h-12 w-full flex-shrink-0 items-center justify-center rounded-b-lg transition-opacity md:hidden',
+        'sticky left-0 right-0 top-0 z-20 w-full flex-shrink-0 overflow-clip rounded-b-lg bg-white transition-opacity md:hidden',
         showInMdAndBelow ? 'opacity-30' : ''
       )}
     >
-      <Button
-        icon={HiMenu}
-        style="icon"
-        className="absolute left-1 top-1/2 -translate-y-1/2"
-        onClick={onMenuClicked}
-      />
-      <div className="flex items-center space-x-2">
-        <ColoredLogo width={80} />
-        <h1 className="text-xl font-bold text-black/30">| clicks</h1>
+      <div className="bg-color-gradient flex h-12 items-center justify-center">
+        <Button
+          icon={HiMenu}
+          style="icon"
+          className="absolute left-1 top-1/2 -translate-y-1/2"
+          onClick={onMenuClicked}
+        />
+        <div className="flex items-center space-x-2">
+          <ColoredLogo width={80} />
+          <h1 className="text-xl font-bold text-black/30">| clicks</h1>
+        </div>
       </div>
     </header>
   );

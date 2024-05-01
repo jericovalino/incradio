@@ -25,7 +25,7 @@ const PageWrapper = ({
       {(Boolean(pageTitle) || Boolean(pageDescription)) && (
         <div className="flex flex-col space-y-[0.375rem] ">
           {Boolean(pageTitle) && (
-            <h1 className="text-2xl font-semibold">{pageTitle}</h1>
+            <h1 className="text-xl font-semibold sm:text-2xl">{pageTitle}</h1>
           )}
           {Boolean(pageDescription) && (
             <p className="text-subtle text-sm leading-4">{pageDescription}</p>

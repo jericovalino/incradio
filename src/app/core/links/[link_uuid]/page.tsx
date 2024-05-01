@@ -1,8 +1,9 @@
 'use client';
+
+import Link from 'next/link';
 import Chart from 'react-apexcharts';
 import { IoMenu } from 'react-icons/io5';
 import { FaRegCopy } from 'react-icons/fa6';
-import { useRouter } from 'next/navigation';
 import { TbArrowBigLeftFilled } from 'react-icons/tb';
 
 import { Button } from '@/components/input_controls';
@@ -31,12 +32,11 @@ const getYoutubeVideoIdFromUrl = (url: string) => {
   return match && match[2].length === 11 ? match[2] : null;
 };
 
-const Link = ({ params }: Props) => {
-  const { data } = useLinkDataQuery(params.link_uuid);
-  const { data: clickList, isLoading } = useLinkClickHistoryListQuery(
-    params.link_uuid
-  );
-  const router = useRouter();
+const LinkView = ({ params }: Props) => {
+  const { data, isLoading: isLoadingData } = useLinkDataQuery(params.link_uuid);
+  const { data: clickList, isLoading: isLoadingHistories } =
+    useLinkClickHistoryListQuery(params.link_uuid);
+  // const router = useRouter();
 
   const { data: rankList } = useLinkClickRankListQuery(params.link_uuid);
   const { isReady, copyLinks } = useShareableLinks(params.link_uuid);
@@ -45,12 +45,15 @@ const Link = ({ params }: Props) => {
     <PageWrapper
       pageTitle={
         <div className="flex items-center gap-2">
-          <Button
-            style="icon"
-            size="small"
-            icon={TbArrowBigLeftFilled}
-            onClick={() => router.push('/core/links')}
-          />
+          <Link href={'/core/links'}>
+            <Button
+              style="icon"
+              size="small"
+              icon={TbArrowBigLeftFilled}
+              // onClick={() => router.push('/core/links')}
+            />
+          </Link>
+
           <span>{data?.title ?? '-'}</span>
         </div>
       }
@@ -58,7 +61,7 @@ const Link = ({ params }: Props) => {
       containerClassName="@container"
     >
       <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-12 @lg:col-span-5">
+        <div className="col-span-12 @3xl:col-span-5">
           <iframe
             className="aspect-video w-full"
             src={`https://www.youtube.com/embed/${getYoutubeVideoIdFromUrl(data?.url ?? '')}`}
@@ -68,20 +71,30 @@ const Link = ({ params }: Props) => {
             allowFullScreen
           />
         </div>
-        <div className="col-span-12 flex flex-col justify-between gap-4 @lg:col-span-7 @lg:flex-row">
-          <div className="flex flex-col gap-4">
+        <div className="col-span-12 flex flex-col justify-between gap-4 @3xl:col-span-7 @3xl:flex-row">
+          <div className="flex max-w-60 flex-grow flex-col gap-4">
             <FieldView
               label="Created at"
               value={data?.created_at?.toString()}
+              isLoading={isLoadingData}
+              // value={undefined}
+              // isLoading
             />
-            <FieldView label="Code" value={data?.code} />
+            <FieldView
+              label="Code"
+              value={data?.code}
+              isLoading={isLoadingData}
+              // value={undefined}
+              // isLoading
+            />
           </div>
           <div className="flex gap-2">
             <Button
               theme="primary"
               style="outline"
               leftIcon={FaRegCopy}
-              disabled={!isReady}
+              className="flex-grow @3xl:flex-grow-0"
+              // disabled={!isReady}
               onClick={copyLinks}
             >
               Copy shareable links
@@ -91,7 +104,7 @@ const Link = ({ params }: Props) => {
         </div>
       </div>
 
-      <section className="grid gap-6 @lg:grid-cols-2">
+      <section className="grid gap-6 @3xl:grid-cols-2">
         <div>
           <h3 className="mt-6 text-lg font-semibold leading-5">
             Local Rankings
@@ -129,10 +142,10 @@ const Link = ({ params }: Props) => {
         <div className="flex flex-col rounded border bg-white p-4">
           <h3 className="font-semibold leading-5">Histories</h3>
           <p className="text-sm">Lorem ipsum dolor</p>
-          <div className="mt-4 @lg:h-0 @lg:flex-grow">
+          <div className="mt-4 max-h-96 @3xl:h-0 @3xl:max-h-none @3xl:flex-grow">
             <Table
               data={clickList ?? []}
-              isLoading={isLoading}
+              isLoading={isLoadingHistories}
               format={[
                 {
                   label: 'Date/Time',
@@ -141,6 +154,10 @@ const Link = ({ params }: Props) => {
                 {
                   label: 'Local',
                   key: 'local_name',
+                },
+                {
+                  label: 'IP Address',
+                  key: 'ip',
                 },
               ]}
             />
@@ -151,4 +168,4 @@ const Link = ({ params }: Props) => {
   );
 };
 
-export default Link;
+export default LinkView;
