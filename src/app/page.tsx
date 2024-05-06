@@ -11,6 +11,8 @@ function Home() {
 
   useEffect(() => {
     if (searchParams.get('from') !== 'google') return;
+    if (searchParams.get('error_code') === '500')
+      return router.push('/access-denied');
     console.log('redirecting to /core');
     const t = setTimeout(() => {
       router.push('/core');

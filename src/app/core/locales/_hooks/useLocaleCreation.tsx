@@ -4,44 +4,45 @@ import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCreateModal } from '@/hooks';
-
 import { ModalCard } from '@/components/containers';
 
-import { LinkForm } from '../_contents';
+import { LocaleForm, type LocalePayload } from '../_contents';
 
-const createLink = (payload: any) => axios.post('core_links', payload);
+const createLocale = (payload: LocalePayload) =>
+  axios.post('core_locales', payload);
 
-const useCreateLinkMutation = () => {
+const useCreateLocaleMutation = () => {
   return useMutation({
-    mutationKey: ['CREATE_LINK'],
-    mutationFn: createLink,
+    mutationKey: ['CREATE_LOCALE'],
+    mutationFn: createLocale,
   });
 };
 
-const useLinkCreation = () => {
+const useLocaleCreation = () => {
   const queryClient = useQueryClient();
-  const { mutate: createLink, isPending: isLoading } = useCreateLinkMutation();
+  const { mutate: createLocale, isPending: isLoading } =
+    useCreateLocaleMutation();
 
-  const createModal = useCreateModal('CREATE_LINK', { isLoading });
-  const openLinkCreationModal = useCallback(() => {
+  const createModal = useCreateModal('CREATE_LOCALE', { isLoading });
+  const openLocaleCreationModal = useCallback(() => {
     createModal({
       content:
         (close) =>
         ({ isLoading }) => (
-          <ModalCard onClose={close} title="Add Link" theme="float">
+          <ModalCard onClose={close} title="Add Locale" theme="float">
             <div className="space-y-4">
               <header>
-                <h3 className="text-lg font-semibold leading-5">Add Link</h3>
+                <h3 className="text-lg font-semibold leading-5">Add Locale</h3>
                 <p className="text-sm">Lorem ipsum dolor</p>
               </header>
-              <LinkForm
+              <LocaleForm
                 onSubmit={(values) => {
-                  createLink(values, {
+                  createLocale(values, {
                     onSuccess: () => {
                       close();
-                      toast.success('New Link Added');
+                      toast.success('New Locale Added');
                       queryClient.invalidateQueries({
-                        queryKey: ['LINKS'],
+                        queryKey: ['LOCALES'],
                       });
                     },
                   });
@@ -52,11 +53,11 @@ const useLinkCreation = () => {
           </ModalCard>
         ),
     });
-  }, [createModal, queryClient, createLink]);
+  }, [createModal, queryClient, createLocale]);
 
   return {
-    openLinkCreationModal,
+    openLocaleCreationModal,
   };
 };
 
-export default useLinkCreation;
+export default useLocaleCreation;

@@ -1,5 +1,5 @@
 {
-  "id": "1785276f-d8b5-4556-ac21-2c1df2884ab5",
+  "id": "8ae34f9d-5212-4b50-911a-debfceaa31fd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -22,8 +22,14 @@
           "notNull": false,
           "default": "now()"
         },
-        "local_code": {
-          "name": "local_code",
+        "district_code": {
+          "name": "district_code",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "locale_code": {
+          "name": "locale_code",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -40,15 +46,34 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'0.0.0.0'"
+        },
+        "is_bot": {
+          "name": "is_bot",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "user_agent_hash": {
+          "name": "user_agent_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "user_agent_hash_index": {
+          "name": "user_agent_hash_index",
+          "columns": ["user_agent_hash"],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
-        "click_local_code_local_code_fk": {
-          "name": "click_local_code_local_code_fk",
+        "click_district_code_district_code_fk": {
+          "name": "click_district_code_district_code_fk",
           "tableFrom": "click",
-          "tableTo": "local",
-          "columnsFrom": ["local_code"],
+          "tableTo": "district",
+          "columnsFrom": ["district_code"],
           "columnsTo": ["code"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -88,6 +113,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -98,6 +129,11 @@
           "name": "district_id_unique",
           "nullsNotDistinct": false,
           "columns": ["id"]
+        },
+        "district_code_unique": {
+          "name": "district_code_unique",
+          "nullsNotDistinct": false,
+          "columns": ["code"]
         }
       }
     },
@@ -142,6 +178,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ACTIVE'"
         }
       },
       "indexes": {},
@@ -170,8 +213,8 @@
         }
       }
     },
-    "local": {
-      "name": "local",
+    "locale": {
+      "name": "locale",
       "schema": "",
       "columns": {
         "id": {
@@ -202,9 +245,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "local_district_id_district_id_fk": {
-          "name": "local_district_id_district_id_fk",
-          "tableFrom": "local",
+        "locale_district_id_district_id_fk": {
+          "name": "locale_district_id_district_id_fk",
+          "tableFrom": "locale",
           "tableTo": "district",
           "columnsFrom": ["district_id"],
           "columnsTo": ["id"],
@@ -214,8 +257,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "local_id_unique": {
-          "name": "local_id_unique",
+        "locale_id_unique": {
+          "name": "locale_id_unique",
           "nullsNotDistinct": false,
           "columns": ["id"]
         }

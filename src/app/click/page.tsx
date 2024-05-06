@@ -1,5 +1,6 @@
+import hash from 'object-hash';
 import { headers } from 'next/headers';
-import { NextRequest } from 'next/server';
+import { NextRequest, userAgent } from 'next/server';
 
 import { db } from '@/drizzle/db';
 import { notFound, redirect } from 'next/navigation';
@@ -18,32 +19,47 @@ const getClientIP = (requestHeaders: NextRequest['headers']) => {
 const Click = async ({
   searchParams,
 }: {
-  searchParams?: { local?: string; link?: string };
+  searchParams?: { locale?: string; link?: string; district?: string };
 }) => {
   const headerList = headers();
+  const userAgentList = userAgent({ headers: headerList });
+
+  console.log('userAgentList: ', userAgentList);
+  console.log('useAgentHash: ', hash(userAgent));
 
   /* -------------------------------------------------------------------------- */
   const ip = getClientIP(headerList);
-  const local_code = searchParams?.local;
+  const locale_code = searchParams?.locale;
   const link_code = searchParams?.link;
-  if (!local_code || !link_code) return notFound();
+  const district_code = searchParams?.district;
+  if (!locale_code || !link_code || !district_code) return notFound();
   /* -------------------------------------------------------------------------- */
   const link = await db.query.LinkTable.findFirst({
     where: (fields, operators) => operators.eq(fields.code, link_code),
   });
   if (!link) return notFound();
+  if (link.status === 'ARCHIVED') return notFound();
   /* -------------------------------------------------------------------------- */
-  const local = await db.query.LocalTable.findFirst({
-    where: (fields, operators) => operators.eq(fields.code, local_code),
+  const district = await db.query.DistrictTable.findFirst({
+    where: (fields, operators) => operators.eq(fields.code, district_code),
   });
-  if (!local) return notFound();
+  if (!district) return notFound();
+  /* -------------------------------------------------------------------------- */
+  const locale = await db.query.LocaleTable.findFirst({
+    where: (fields, operators) => operators.eq(fields.code, locale_code),
+  });
+  if (!locale) return notFound();
   /* -------------------------------------------------------------------------- */
 
-  await db.insert(ClickTable).values({
-    ip,
-    link_code,
-    local_code,
-  });
+  if (!userAgentList.isBot) {
+    await db.insert(ClickTable).values({
+      ip,
+      link_code,
+      locale_code,
+      district_code,
+      user_agent_hash: hash(userAgentList),
+    });
+  }
 
   return redirect(link?.url);
 };

@@ -7,8 +7,7 @@ const MAP_THEME_NORMAL_CLASS = {
   primary:
     'bg-primary text-white/90 hover:bg-opacity-90 active:bg-opacity-100 [&>span]:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] [&>svg]:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]',
   info: 'bg-info text-onInfo hover:bg-info-hovered active:bg-info-pressed',
-  danger:
-    'bg-danger text-onDanger hover:bg-danger-hovered active:bg-danger-pressed',
+  danger: 'bg-red-500 text-white hover:bg-opacity-90 active:bg-opacity-100',
   default: 'border bg-gray-50 active:bg-gray-50 hover:bg-white hover:shadow',
 };
 
@@ -37,7 +36,7 @@ const MAP_THEME_ICON_CLASS = {
     'bg-primary text-white hover:bg-primary/40 active:bg-primary aspect-square',
   info: 'bg-info text-onInfo hover:bg-info-hovered active:bg-info-pressed aspect-square',
   danger:
-    'bg-danger text-onDanger hover:bg-danger-hovered active:bg-danger-pressed aspect-square',
+    'bg-red-500 text-white hover:bg-opacity-90 active:bg-opacity-100 aspect-square',
   default:
     'border border-subtle bg-interface-hovered active:bg-interface-hovered hover:bg-interface hover:shadow aspect-square',
 };
@@ -102,7 +101,7 @@ const Button = ({
           icon: MAP_THEME_ICON_CLASS[theme],
         }[rest.style ?? 'normal'],
         'flex items-center justify-center rounded focus:ring-4',
-        'disabled:border-subtle disabled:bg-interface-disabled disabled:text-disabled disabled:border',
+        'disabled:border disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-300',
         rest.style === 'icon' && rest.isRounded ? 'rounded-full' : '',
         className
       )}

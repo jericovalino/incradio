@@ -67,15 +67,27 @@ const Sidebar = ({ onBackdropClicked, showInMdAndBelow }: Props) => {
             District of {profileData?.district.name}
           </h2>
           <nav className="z-10 mt-2 flex flex-grow flex-col space-y-2">
-            <NavLink href="/core/dashboard" icon={FaChartSimple}>
+            <NavLink
+              href="/core/dashboard"
+              icon={FaChartSimple}
+              onClick={onBackdropClicked}
+            >
               Dashboard
             </NavLink>
-            <NavLink href="/core/links" icon={FaLink}>
+            <NavLink
+              href="/core/links"
+              icon={FaLink}
+              onClick={onBackdropClicked}
+            >
               Links
             </NavLink>
             <p className="mt-4 text-lg font-bold text-black/30">Settings</p>
-            <NavLink href="/core/locals" icon={GiChurch}>
-              Locals
+            <NavLink
+              href="/core/locales"
+              icon={GiChurch}
+              onClick={onBackdropClicked}
+            >
+              Locales
             </NavLink>
             <div className="!mt-auto flex items-center justify-between">
               <div className="flex items-center space-x-2">

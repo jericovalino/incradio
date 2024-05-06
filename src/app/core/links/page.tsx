@@ -20,7 +20,7 @@ const Links = () => {
 
   return (
     <PageWrapper pageTitle="Links" pageDescription="Lorem ipsum dolor">
-      <div className="space-y-2">
+      <div className="flex flex-col space-y-2 sm:h-full">
         <ModuleFilters
           filter={filter}
           setFilter={setFilter}
@@ -35,35 +35,37 @@ const Links = () => {
             </Button>,
           ]}
         />
-        <Table
-          isLoading={isLoading}
-          data={linkList ?? []}
-          format={[
-            {
-              key: 'created_at_human',
-              label: 'Date/Time',
-            },
-            {
-              key: 'title',
-              label: 'Title',
-            },
-            {
-              key: 'url',
-              label: 'Url',
-            },
-            {
-              key: 'id',
-              label: 'Action',
-              render: (row) => (
-                <Link href={`/core/links/${row.id}`}>
-                  <Button theme="primary" style="outline" className="w-full">
-                    View
-                  </Button>
-                </Link>
-              ),
-            },
-          ]}
-        />
+        <div className="sm:h-0 sm:flex-grow">
+          <Table
+            isLoading={isLoading}
+            data={linkList ?? []}
+            format={[
+              {
+                key: 'created_at_human',
+                label: 'Date/Time',
+              },
+              {
+                key: 'title',
+                label: 'Title',
+              },
+              {
+                key: 'url',
+                label: 'Url',
+              },
+              {
+                key: 'id',
+                label: 'Action',
+                render: (row) => (
+                  <Link href={`/core/links/${row.id}`}>
+                    <Button theme="primary" style="outline" className="w-full">
+                      View
+                    </Button>
+                  </Link>
+                ),
+              },
+            ]}
+          />
+        </div>
       </div>
     </PageWrapper>
   );

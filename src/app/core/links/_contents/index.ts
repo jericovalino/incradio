@@ -1,1 +1,1 @@
-export { default as LinkCreationForm } from './LinkCreationForm';
+export { default as LinkForm, type LinkPayload } from './LinkForm';
