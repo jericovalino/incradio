@@ -1,13 +1,10 @@
-import { nanoid } from 'nanoid';
 import { db } from '@/drizzle/db';
-import { PostgresError } from 'postgres';
-import { InferSelectModel } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
-
-import { LinkTable } from '@/drizzle/schema';
+import { LocaleTable, UserTable } from '@/drizzle/schema';
 import { createClient } from '@/utils/supabase/middleware';
-
-import { LinkPayloadSchema } from './schema';
+import { eq } from 'drizzle-orm';
+import { NextRequest, NextResponse } from 'next/server';
+import { LocalePayload, LocalePayloadSchema } from './schema';
+import { PostgresError } from 'postgres';
 
 const unauthorizedResponse = NextResponse.json(
   {
@@ -61,20 +58,20 @@ export const GET = async (req: NextRequest) => {
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------------------------------------------------- */
-  const user = await db.query.UserTable.findFirst({
-    where: (fields, operators) => operators.eq(fields.email, authUser.email!),
-  });
-  if (!user) return unauthorizedResponse;
+  const users = await db
+    .select()
+    .from(UserTable)
+    .where(eq(UserTable.email, authUser.email!));
+  if (users.length !== 1) return unauthorizedResponse;
   /* -------------------------------------------------------------------------- */
 
-  const links = await db.query.LinkTable.findMany({
-    where: (fields, operators) =>
-      operators.and(
-        operators.eq(fields.district_id, user.district_id),
-        operators.notLike(fields.status, 'ARCHIVED')
-      ),
-  });
-  return NextResponse.json(links);
+  const user = users[0];
+  const locales = await db
+    .select()
+    .from(LocaleTable)
+    .where(eq(LocaleTable.district_id, user.district_id));
+
+  return NextResponse.json(locales);
 };
 
 export const POST = async (req: NextRequest) => {
@@ -93,28 +90,50 @@ export const POST = async (req: NextRequest) => {
   });
   if (!user) return unauthorizedResponse;
   /* -------------------------------------------------------------------------- */
+  const district = await db.query.DistrictTable.findFirst({
+    where: (fields, operators) => operators.eq(fields.id, user.district_id),
+  });
+  if (!user) return unauthorizedResponse;
+  /* -------------------------------------------------------------------------- */
 
   const requestPayload = await req.json();
-  const result = LinkPayloadSchema.safeParse(requestPayload);
+  const result = LocalePayloadSchema.safeParse(requestPayload);
   if (!result.success) return unprocessableResponse;
 
-  let newlyInsertedLinks: InferSelectModel<typeof LinkTable>[];
+  /* -------------------------------------------------------------------------- */
+  const existingLocale = await db.query.LocaleTable.findFirst({
+    where: (fields, operators) =>
+      operators.and(
+        operators.eq(fields.district_id, user.district_id),
+        operators.eq(fields.code, result.data.code)
+      ),
+  });
+  if (existingLocale)
+    return createUnprocessableResponse(
+      `locale code already exist in ${district?.name}`
+    );
+  /* -------------------------------------------------------------------------- */
 
   try {
-    newlyInsertedLinks = await db
-      .insert(LinkTable)
+    type NewlyInsertedLocales = Array<
+      LocalePayload & {
+        id: string;
+        district_id: string;
+      }
+    >;
+    const newlyInsertedLocales: NewlyInsertedLocales = await db
+      .insert(LocaleTable)
       .values({
         ...result.data,
         district_id: user.district_id,
-        code: nanoid(),
       })
       .returning();
+    return NextResponse.json(newlyInsertedLocales[0]);
   } catch (err) {
     const error = err as PostgresError;
+
     if ((error as PostgresError).code === '23505')
       return createUnprocessableResponse(error.detail);
     return internalServerErrorResponse;
   }
-
-  return NextResponse.json(newlyInsertedLinks[0]);
 };

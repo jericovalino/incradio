@@ -1,13 +1,11 @@
-import { nanoid } from 'nanoid';
+import { eq } from 'drizzle-orm';
 import { db } from '@/drizzle/db';
-import { PostgresError } from 'postgres';
-import { InferSelectModel } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { LinkTable } from '@/drizzle/schema';
 import { createClient } from '@/utils/supabase/middleware';
 
-import { LinkPayloadSchema } from './schema';
+import { LinkPayloadSchema } from '../schema';
 
 const unauthorizedResponse = NextResponse.json(
   {
@@ -16,6 +14,16 @@ const unauthorizedResponse = NextResponse.json(
   {
     status: 401,
     statusText: 'unauthorized',
+  }
+);
+
+const notfoundResponse = NextResponse.json(
+  {
+    message: 'not found',
+  },
+  {
+    status: 404,
+    statusText: 'not found',
   }
 );
 
@@ -29,17 +37,6 @@ const unprocessableResponse = NextResponse.json(
   }
 );
 
-const createUnprocessableResponse = (message?: string) =>
-  NextResponse.json(
-    {
-      message: message ?? 'unprocessable content',
-    },
-    {
-      status: 402,
-      statusText: 'unprocessable content',
-    }
-  );
-
 const internalServerErrorResponse = NextResponse.json(
   {
     message: 'internal server error',
@@ -50,7 +47,10 @@ const internalServerErrorResponse = NextResponse.json(
   }
 );
 
-export const GET = async (req: NextRequest) => {
+type Params = {
+  link_id: string;
+};
+export const GET = async (req: NextRequest, { params }: { params: Params }) => {
   const client = createClient(req);
 
   /* -------------------------------------------------------------------------- */
@@ -60,25 +60,19 @@ export const GET = async (req: NextRequest) => {
   if (!authUser) return unauthorizedResponse;
   /* -------------------------------------------------------------------------- */
 
-  /* -------------------------------------------------------------------------- */
-  const user = await db.query.UserTable.findFirst({
-    where: (fields, operators) => operators.eq(fields.email, authUser.email!),
-  });
-  if (!user) return unauthorizedResponse;
-  /* -------------------------------------------------------------------------- */
-
-  const links = await db.query.LinkTable.findMany({
-    where: (fields, operators) =>
-      operators.and(
-        operators.eq(fields.district_id, user.district_id),
-        operators.notLike(fields.status, 'ARCHIVED')
-      ),
-  });
-  return NextResponse.json(links);
+  try {
+    const link = await db.query.LinkTable.findFirst({
+      where: (fields, operators) => operators.eq(fields.id, params.link_id),
+    });
+    return NextResponse.json(link);
+  } catch {
+    return notfoundResponse;
+  }
 };
 
-export const POST = async (req: NextRequest) => {
+export const PUT = async (req: NextRequest, { params }: { params: Params }) => {
   const client = createClient(req);
+  const { link_id } = params;
 
   /* -------------------------------------------------------------------------- */
   const authUser = await client.supabase.auth
@@ -94,27 +88,28 @@ export const POST = async (req: NextRequest) => {
   if (!user) return unauthorizedResponse;
   /* -------------------------------------------------------------------------- */
 
+  /* -------------------------------------------------------------------------- */
+  const link = await db.query.LinkTable.findFirst({
+    where: (fields, operators) => operators.eq(fields.id, params.link_id),
+  });
+  if (!link) return notfoundResponse;
+  if (link.district_id !== user.district_id) return unauthorizedResponse;
+  /* -------------------------------------------------------------------------- */
+
+  /* -------------------------------------------------------------------------- */
   const requestPayload = await req.json();
   const result = LinkPayloadSchema.safeParse(requestPayload);
   if (!result.success) return unprocessableResponse;
-
-  let newlyInsertedLinks: InferSelectModel<typeof LinkTable>[];
+  /* -------------------------------------------------------------------------- */
 
   try {
-    newlyInsertedLinks = await db
-      .insert(LinkTable)
-      .values({
-        ...result.data,
-        district_id: user.district_id,
-        code: nanoid(),
-      })
+    const newlyUpdatedLinks = await db
+      .update(LinkTable)
+      .set(result.data)
+      .where(eq(LinkTable.id, link_id))
       .returning();
+    return NextResponse.json(newlyUpdatedLinks[0]);
   } catch (err) {
-    const error = err as PostgresError;
-    if ((error as PostgresError).code === '23505')
-      return createUnprocessableResponse(error.detail);
     return internalServerErrorResponse;
   }
-
-  return NextResponse.json(newlyInsertedLinks[0]);
 };
