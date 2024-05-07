@@ -51,15 +51,16 @@ const Click = async ({
   if (!locale) return notFound();
   /* -------------------------------------------------------------------------- */
 
-  if (!userAgentList.isBot) {
-    await db.insert(ClickTable).values({
-      ip,
-      link_code,
-      locale_code,
-      district_code,
-      user_agent_hash: hash(userAgentList),
-    });
-  }
+  // if (!userAgentList.isBot) {
+  await db.insert(ClickTable).values({
+    ip,
+    link_code,
+    locale_code,
+    district_code,
+    user_agent_stringify: JSON.stringify(userAgentList),
+    user_agent_hash: hash(userAgentList),
+  });
+  // }
 
   return redirect(link?.url);
 };

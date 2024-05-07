@@ -1,13 +1,13 @@
 import { relations } from 'drizzle-orm';
 import {
-  pgTable,
-  uuid,
-  varchar,
-  timestamp,
   cidr,
-  boolean,
+  uuid,
+  json,
   index,
-  pgEnum,
+  varchar,
+  boolean,
+  pgTable,
+  timestamp,
 } from 'drizzle-orm/pg-core';
 
 export const DistrictTable = pgTable('district', {
@@ -66,7 +66,8 @@ export const ClickTable = pgTable(
       .notNull(),
     ip: cidr('ip').default('0.0.0.0'),
     is_bot: boolean('is_bot').default(false),
-    user_agent_hash: varchar('user_agent_hash'),
+    user_agent_stringify: varchar('user_agent_stringify'),
+    user_agent_hash: json('user_agent_hash'),
   },
   (table) => ({
     user_agent_hash_index: index('user_agent_hash_index').on(
