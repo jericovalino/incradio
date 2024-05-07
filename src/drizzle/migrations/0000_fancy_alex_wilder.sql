@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS "click" (
 	"link_code" varchar NOT NULL,
 	"ip" "cidr" DEFAULT '0.0.0.0',
 	"is_bot" boolean DEFAULT false,
+	"user_agent_stringify" varchar,
 	"user_agent_hash" varchar,
 	CONSTRAINT "click_id_unique" UNIQUE("id")
 );

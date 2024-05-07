@@ -67,7 +67,7 @@ export const ClickTable = pgTable(
     ip: cidr('ip').default('0.0.0.0'),
     is_bot: boolean('is_bot').default(false),
     user_agent_stringify: varchar('user_agent_stringify'),
-    user_agent_hash: json('user_agent_hash'),
+    user_agent_hash: varchar('user_agent_hash'),
   },
   (table) => ({
     user_agent_hash_index: index('user_agent_hash_index').on(
