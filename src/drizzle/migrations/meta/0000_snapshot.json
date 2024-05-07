@@ -1,5 +1,5 @@
 {
-  "id": "8ae34f9d-5212-4b50-911a-debfceaa31fd",
+  "id": "db614f0a-9916-438c-abac-f201459ea30c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -53,6 +53,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
+        },
+        "user_agent_stringify": {
+          "name": "user_agent_stringify",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         },
         "user_agent_hash": {
           "name": "user_agent_hash",

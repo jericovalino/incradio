@@ -58,6 +58,7 @@ const Click = async ({
     locale_code,
     district_code,
     user_agent_stringify: JSON.stringify(userAgentList),
+    is_bot: userAgentList.isBot,
     user_agent_hash: hash(userAgentList),
   });
   // }
