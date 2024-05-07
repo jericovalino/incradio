@@ -5,8 +5,7 @@ CREATE TABLE IF NOT EXISTS "click" (
 	"locale_code" varchar NOT NULL,
 	"link_code" varchar NOT NULL,
 	"ip" "cidr" DEFAULT '0.0.0.0',
-	"is_bot" boolean DEFAULT false,
-	"user_agent_stringify" varchar,
+	"is_bot" boolean DEFAULT false NOT NULL,
 	"user_agent_hash" varchar,
 	CONSTRAINT "click_id_unique" UNIQUE("id")
 );

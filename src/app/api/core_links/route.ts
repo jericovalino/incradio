@@ -73,6 +73,7 @@ export const GET = async (req: NextRequest) => {
         operators.eq(fields.district_id, user.district_id),
         operators.notLike(fields.status, 'ARCHIVED')
       ),
+    orderBy: (fields, operators) => operators.desc(fields.created_at),
   });
   return NextResponse.json(links);
 };

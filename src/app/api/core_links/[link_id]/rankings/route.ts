@@ -1,7 +1,8 @@
-import { db } from '@/drizzle/db';
-import { and, count, desc, eq } from 'drizzle-orm';
+import dayjs from 'dayjs';
 import { NextRequest, NextResponse } from 'next/server';
+import { and, count, desc, eq, gte, lte } from 'drizzle-orm';
 
+import { db } from '@/drizzle/db';
 import { createClient } from '@/utils/supabase/middleware';
 import { ClickTable, LocaleTable } from '@/drizzle/schema';
 
@@ -27,6 +28,8 @@ const notfoundResponse = NextResponse.json(
 
 type Params = {
   link_id: string;
+  from?: string;
+  to?: string;
 };
 export const GET = async (req: NextRequest, { params }: { params: Params }) => {
   const client = createClient(req);
@@ -58,8 +61,21 @@ export const GET = async (req: NextRequest, { params }: { params: Params }) => {
     .rightJoin(
       LocaleTable,
       and(
+        eq(ClickTable.is_bot, false),
         eq(ClickTable.link_code, link.code),
-        eq(ClickTable.locale_code, LocaleTable.code)
+        eq(ClickTable.locale_code, LocaleTable.code),
+        params.from
+          ? gte(
+              ClickTable.created_at,
+              dayjs(params.from, { locale: 'tl-ph' }).utc().toDate()
+            )
+          : undefined,
+        params.to
+          ? lte(
+              ClickTable.created_at,
+              dayjs(params.to, { locale: 'tl-ph' }).utc().toDate()
+            )
+          : undefined
       )
     )
     .groupBy(LocaleTable.name, LocaleTable.code, ClickTable.locale_code)

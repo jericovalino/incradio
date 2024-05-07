@@ -55,7 +55,13 @@ export const GET = async (req: NextRequest, { params }: { params: Params }) => {
       ip: ClickTable.ip,
     })
     .from(ClickTable)
-    .leftJoin(LocaleTable, eq(LocaleTable.code, ClickTable.locale_code))
+    .leftJoin(
+      LocaleTable,
+      and(
+        eq(ClickTable.is_bot, false),
+        eq(ClickTable.locale_code, LocaleTable.code)
+      )
+    )
     .where(
       and(
         eq(ClickTable.link_code, link.code),

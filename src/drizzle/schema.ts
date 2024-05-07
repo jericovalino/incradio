@@ -65,8 +65,7 @@ export const ClickTable = pgTable(
       .references(() => LinkTable.code)
       .notNull(),
     ip: cidr('ip').default('0.0.0.0'),
-    is_bot: boolean('is_bot').default(false),
-    user_agent_stringify: varchar('user_agent_stringify'),
+    is_bot: boolean('is_bot').notNull().default(false),
     user_agent_hash: varchar('user_agent_hash'),
   },
   (table) => ({

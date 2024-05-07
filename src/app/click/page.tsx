@@ -5,6 +5,16 @@ import { NextRequest, userAgent } from 'next/server';
 import { db } from '@/drizzle/db';
 import { notFound, redirect } from 'next/navigation';
 import { ClickTable } from '@/drizzle/schema';
+import type { GeoFromIp, GeoFromIpError } from './schema';
+
+const getGeoFromIpAsync = (ip: string) =>
+  new Promise<GeoFromIp | GeoFromIpError>(async (resolve) => {
+    const response = await fetch(
+      `https://api.ip2location.io/?key=${process.env.NEXT_PUBLIC_IP2LOCATION_KEY}&ip=${ip}&format=json`
+    );
+    const result: Promise<GeoFromIp | GeoFromIpError> = await response.json();
+    resolve(result);
+  });
 
 const getClientIP = (requestHeaders: NextRequest['headers']) => {
   const FALLBACK_IP_ADDRESS = '0.0.0.0';
@@ -51,17 +61,23 @@ const Click = async ({
   if (!locale) return notFound();
   /* -------------------------------------------------------------------------- */
 
-  // if (!userAgentList.isBot) {
+  const geo = await getGeoFromIpAsync(ip.replace(/\/[\s\S]*$/, ''));
+
+  let requestIsFromOverseas: boolean;
+  if ('error' in geo) {
+    requestIsFromOverseas = true;
+  } else {
+    requestIsFromOverseas = geo.country_code !== 'PH';
+  }
+
   await db.insert(ClickTable).values({
     ip,
     link_code,
     locale_code,
     district_code,
-    user_agent_stringify: JSON.stringify(userAgentList),
-    is_bot: userAgentList.isBot,
+    is_bot: userAgentList.isBot || requestIsFromOverseas,
     user_agent_hash: hash(userAgentList),
   });
-  // }
 
   return redirect(link?.url);
 };

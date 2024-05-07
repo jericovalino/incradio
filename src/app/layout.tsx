@@ -1,10 +1,14 @@
+import dayjs from 'dayjs';
 import { Suspense } from 'react';
+import utc from 'dayjs/plugin/utc';
 import { Inter } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import { ToastContainer, Flip } from 'react-toastify';
 
 import { cn } from '@/utils';
 import { QueryProvider, ModalProvider } from '@/providers';
+
+dayjs.extend(utc);
 
 import '../assets/styles/tailwind.css';
 import 'react-toastify/dist/ReactToastify.css';
