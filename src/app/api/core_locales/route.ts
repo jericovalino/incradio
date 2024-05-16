@@ -1,7 +1,7 @@
 import { db } from '@/drizzle/db';
 import { LocaleTable, UserTable } from '@/drizzle/schema';
 import { createClient } from '@/utils/supabase/middleware';
-import { eq } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { LocalePayload, LocalePayloadSchema } from './schema';
 import { PostgresError } from 'postgres';
@@ -69,7 +69,8 @@ export const GET = async (req: NextRequest) => {
   const locales = await db
     .select()
     .from(LocaleTable)
-    .where(eq(LocaleTable.district_id, user.district_id));
+    .where(eq(LocaleTable.district_id, user.district_id))
+    .orderBy(asc(LocaleTable.name));
 
   return NextResponse.json(locales);
 };
