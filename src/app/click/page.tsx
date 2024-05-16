@@ -34,9 +34,6 @@ const Click = async ({
   const headerList = headers();
   const userAgentList = userAgent({ headers: headerList });
 
-  console.log('userAgentList: ', userAgentList);
-  console.log('useAgentHash: ', hash(userAgent));
-
   /* -------------------------------------------------------------------------- */
   const ip = getClientIP(headerList);
   const locale_code = searchParams?.locale;
@@ -60,6 +57,18 @@ const Click = async ({
   });
   if (!locale) return notFound();
   /* -------------------------------------------------------------------------- */
+  const user_agent_hash = hash(userAgentList);
+
+  const sameClick = await db.query.ClickTable.findFirst({
+    where: (fields, operators) =>
+      operators.and(
+        operators.eq(fields.link_code, link_code),
+        operators.eq(fields.locale_code, locale_code),
+        operators.eq(fields.user_agent_hash, user_agent_hash)
+      ),
+  });
+
+  if (Boolean(sameClick)) return redirect(link.url);
 
   const geo = await getGeoFromIpAsync(ip.replace(/\/[\s\S]*$/, ''));
 
@@ -75,11 +84,11 @@ const Click = async ({
     link_code,
     locale_code,
     district_code,
+    user_agent_hash,
     is_bot: userAgentList.isBot || requestIsFromOverseas,
-    user_agent_hash: hash(userAgentList),
   });
 
-  return redirect(link?.url);
+  return redirect(link.url);
 };
 
 export default Click;

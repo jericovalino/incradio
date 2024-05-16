@@ -80,8 +80,7 @@ export const GET = async (req: NextRequest, { params }: { params: Params }) => {
     )
     .groupBy(LocaleTable.name, LocaleTable.code, ClickTable.locale_code)
     .orderBy(desc(count(ClickTable.locale_code)))
-    .where(eq(LocaleTable.district_id, link.district_id))
-    .limit(5);
+    .where(eq(LocaleTable.district_id, link.district_id));
 
   return NextResponse.json(rankings);
 };

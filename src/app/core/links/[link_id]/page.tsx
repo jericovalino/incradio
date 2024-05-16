@@ -21,6 +21,7 @@ import {
   useLinkUpdating,
   useShareableLinks,
 } from './_hooks';
+import { useRankTableModal } from '../_hooks';
 
 type Props = {
   params: {
@@ -48,6 +49,8 @@ const LinkView = ({ params }: Props) => {
   const { data: rankList } = useLinkClickRankListQuery(params.link_id);
   const { isReady, copyLinks } = useShareableLinks(params.link_id);
 
+  const { openRankTableModal } = useRankTableModal();
+
   return (
     <PageWrapper
       pageTitle={
@@ -67,7 +70,7 @@ const LinkView = ({ params }: Props) => {
       pageDescription={data?.url ?? '-'}
       containerClassName="@container"
     >
-      <div className="grid grid-cols-12 gap-6">
+      <section className="grid grid-cols-12 gap-6">
         <div className="col-span-12 @3xl:col-span-5">
           <iframe
             className="aspect-video w-full"
@@ -132,7 +135,7 @@ const LinkView = ({ params }: Props) => {
             </Popover>
           </div>
         </div>
-      </div>
+      </section>
 
       <section className="mt-6 grid gap-6 rounded-xl border bg-slate-100 @3xl:grid-cols-2">
         <div className="p-4">
@@ -140,6 +143,7 @@ const LinkView = ({ params }: Props) => {
           <p className="text-sm">Top 5 locales with most number of clicks</p>
 
           <Chart
+            height="120%"
             type="bar"
             options={{
               grid: {
@@ -158,7 +162,7 @@ const LinkView = ({ params }: Props) => {
               {
                 name: 'clicks count',
                 data:
-                  rankList?.map((rank, i) => ({
+                  rankList?.slice(0, 5).map((rank, i) => ({
                     x: rank.locale_name,
                     y: rank.click_count,
                     fillColor: fillColors[i],
@@ -166,6 +170,13 @@ const LinkView = ({ params }: Props) => {
               },
             ]}
           />
+          <Button
+            className="w-full"
+            onClick={() => openRankTableModal(rankList ?? [])}
+            disabled={!rankList?.length}
+          >
+            View Full Report
+          </Button>
         </div>
         <div className="flex flex-col rounded-xl border bg-white p-4">
           <h3 className="font-semibold leading-5">Histories</h3>
