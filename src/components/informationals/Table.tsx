@@ -1,3 +1,5 @@
+'use client';
+
 import { ElementRef, useLayoutEffect, useRef } from 'react';
 import { Button } from '../input_controls';
 import './Table.css';
