@@ -4,3 +4,4 @@ export { default as useLinkClickRankListQuery } from './useLinkClickRankListQuer
 export { default as useShareableLinks } from './useShareableLinks';
 export { default as useLinkArchiving } from './useLinkArchiving';
 export { default as useLinkUpdating } from './useLinkUpdating';
+export { default as useRankTableModal } from './useRankTableModal';

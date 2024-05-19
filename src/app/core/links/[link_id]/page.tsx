@@ -20,8 +20,8 @@ import {
   useLinkDataQuery,
   useLinkUpdating,
   useShareableLinks,
+  useRankTableModal,
 } from './_hooks';
-import { useRankTableModal } from '../_hooks';
 
 type Props = {
   params: {
@@ -68,7 +68,7 @@ const LinkView = ({ params }: Props) => {
         </div>
       }
       pageDescription={data?.url ?? '-'}
-      containerClassName="@container"
+      containerClassName="@container overflow-auto"
     >
       <section className="grid grid-cols-12 gap-6">
         <div className="col-span-12 @3xl:col-span-5">
@@ -193,10 +193,10 @@ const LinkView = ({ params }: Props) => {
                   label: 'Locale',
                   key: 'locale_name',
                 },
-                {
-                  label: 'IP Address',
-                  key: 'ip',
-                },
+                // {
+                //   label: 'IP Address',
+                //   key: 'ip',
+                // },
               ]}
             />
           </div>

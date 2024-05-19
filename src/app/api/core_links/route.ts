@@ -107,7 +107,7 @@ export const POST = async (req: NextRequest) => {
       .values({
         ...result.data,
         district_id: user.district_id,
-        code: nanoid(),
+        code: nanoid(10),
       })
       .returning();
   } catch (err) {

@@ -1,3 +1,4 @@
+import { ElementRef, useLayoutEffect, useRef } from 'react';
 import { Button } from '../input_controls';
 import './Table.css';
 
@@ -20,6 +21,7 @@ type TGenericTable = <
   isFetching?: boolean;
   hasLoadMoreBtn?: boolean;
   onLoadMoreClicked?: () => void;
+  getRef?: (ref: HTMLTableElement) => void;
 }) => React.ReactElement;
 
 const Table: TGenericTable = function ({
@@ -32,12 +34,21 @@ const Table: TGenericTable = function ({
   isFetching = false,
   hasLoadMoreBtn = false,
   onLoadMoreClicked,
+  getRef,
 }) {
+  const tableRef = useRef<ElementRef<'table'>>(null);
+
+  useLayoutEffect(() => {
+    if (!tableRef.current) return;
+    if (typeof getRef !== 'function') return;
+    getRef(tableRef.current);
+  }, [getRef]);
+
   return (
     <div className="hide-scrollbar bg-interface relative h-full max-h-full w-full overflow-auto rounded-[0.25rem] border">
       <div className="table-container">
         {tableTitle && <caption>{tableTitle}</caption>}
-        <table>
+        <table ref={tableRef}>
           {!hideHead && (
             <thead className="sticky top-0 z-[1] ">
               <tr>

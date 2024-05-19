@@ -11,13 +11,13 @@ const useShareableLinks = (link_id: string) => {
 
   const isReady = useMemo(() => {
     return Boolean(localeList?.length) && Boolean(linkData);
-  }, [localeList]);
+  }, [localeList, linkData]);
 
   const copyLinks = useCallback(() => {
     const text = localeList
       ?.map(
         (locale) =>
-          `${locale.name}\n${location.origin}/click?district=${profileData?.district.code}&locale=${locale.code}&link=${linkData?.code}`
+          `${locale.name}\n${location.origin}/c?district=${profileData?.district.code}&locale=${locale.code}&link=${linkData?.code}`
       )
       .join('\n\n');
     if (!text) return toast.error('links are not yet ready');
